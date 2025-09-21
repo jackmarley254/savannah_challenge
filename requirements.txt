@@ -1,6 +1,20 @@
+# Core Django
 django
 djangorestframework
 psycopg2-binary
+gunicorn
+
+# Environment Variables
 python-decouple
-africastalking
+
+# Database URL parsing
+dj-database-url
+
+# Authentication
 mozilla-django-oidc
+
+# Third-party Services
+africastalking
+
+# Testing
+coverage
