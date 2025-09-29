@@ -13,7 +13,7 @@ class ApiTests(TestCase):
         self.client.force_authenticate(user=self.user)
         # Create a test customer
         self.customer = Customer.objects.create(
-            name='Test Customer',
+            name='jack',
             code='CUST001',
             phone_number='+254797404295'
         )
@@ -23,7 +23,7 @@ class ApiTests(TestCase):
         Test that we can create a customer.
         """
         url = '/api/customers/'
-        data = {'name': 'New Customer', 'code': 'CUST002', 'phone_number': '+254755895615'}
+        data = {'name': 'jack', 'code': 'CUST002', 'phone_number': '+254755895615'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Customer.objects.count(), 2)
