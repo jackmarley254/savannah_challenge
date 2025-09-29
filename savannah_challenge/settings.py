@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import dj_database_url
 from pathlib import Path
 from decouple import config
-import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'mozilla_django_oidc', # For OIDC Authentication
+    #'drf_oidc_auth',  # For JWT Authentication with OIDC
 
     # Local apps
     'api',
@@ -89,10 +90,14 @@ WSGI_APPLICATION = 'savannah_challenge.wsgi.application'
 #        'default': dj_database_url.config(default=config('DATABASE_URL'))
 #    }
 
+# Parse the DATABASE_URL from environment variables
+DATABASE_URL = config('DATABASE_URL') # This line retrieves the string
+
+# Configure the 'default' database connection
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'), # Get the URL from the environment
-        conn_max_age=600  # Keep connections alive for performance
+    'default': dj_database_url.parse(
+        DATABASE_URL,           # <--- CORRECT: Pass the Python variable
+        conn_max_age=600      
     )
 }
 
@@ -104,22 +109,26 @@ AUTHENTICATION_BACKENDS = (
 
 # REST Framework settings
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'mozilla_django_oidc.contrib.drf.OIDCAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # This is the correct path for token validation
+        #'drf_oidc_auth.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication', 
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    )
 }
 
 # OIDC Provider Configuration
 OIDC_RP_CLIENT_ID = config('OIDC_RP_CLIENT_ID')
 OIDC_RP_CLIENT_SECRET = config('OIDC_RP_CLIENT_SECRET')
-OIDC_OP_AUTHORIZATION_ENDPOINT = "https://your-provider.com/auth"
-OIDC_OP_TOKEN_ENDPOINT = "https://your-provider.com/token"
-OIDC_OP_USER_ENDPOINT = "https://your-provider.com/userinfo"
+OIDC_OP_AUTHORIZATION_ENDPOINT = "https://dev-il3s5b3wad7wc3bn.eu.auth0.com/authorize"
+OIDC_OP_TOKEN_ENDPOINT = "https://dev-il3s5b3wad7wc3bn.eu.auth0.com/oauth/token"
+OIDC_OP_USER_ENDPOINT = "https://dev-il3s5b3wad7wc3bn.eu.auth0.com/userinfo"
 OIDC_RP_SIGN_ALGO = "RS256"
-OIDC_OP_JWKS_ENDPOINT = "https://your-provider.com/.well-known/jwks.json"
+OIDC_RP_REDIRECT_URI = "http://localhost:8000/oidc/callback/"
+OIDC_OP_ISSUER = "https://dev-il3s5b3wad7wc3bn.eu.auth0.com/"
+OIDC_OP_JWKS_ENDPOINT = "https://dev-il3s5b3wad7wc3bn.eu.auth0.com/.well-known/jwks.json"
 LOGIN_REDIRECT_URL = "/api/orders/"
 LOGOUT_REDIRECT_URL = "/"
 
