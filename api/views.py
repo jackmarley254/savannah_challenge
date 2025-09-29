@@ -6,6 +6,11 @@ from .serializers import CustomerSerializer, OrderSerializer
 from .services import send_order_alert_sms
 from django.http import JsonResponse
 
+def status_view(request):
+         """Returns a simple JSON response to confirm the API is up."""
+         return JsonResponse({"status": "ok", "message": "Savannah API is running"})
+
+
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
@@ -29,7 +34,3 @@ class OrderViewSet(viewsets.ModelViewSet):
         
         # Send the SMS 
         send_order_alert_sms(customer.phone_number, message)
-    
-    def status_view(request):
-         """Returns a simple JSON response to confirm the API is up."""
-         return JsonResponse({"status": "ok", "message": "Savannah API is running"})
