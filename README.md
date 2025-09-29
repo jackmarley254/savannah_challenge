@@ -7,7 +7,7 @@ This project is a simple Customers and Orders service built with Python, Django,
 -   Create and manage Customers.
 -   Create and manage Orders associated with Customers. 
 -   REST API for all operations.
--   Authentication via OpenID Connect (OIDC). [cite: 78]
+-   Authentication via OpenID Connect (OIDC).
 -   Sends an SMS alert via Africa's Talking when an order is created.
 -   Unit tested with coverage reports. 
 -   CI/CD pipeline using GitHub Actions. 
