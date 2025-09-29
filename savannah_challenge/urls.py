@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from api.views import status_view
 
 urlpatterns = [
+    path('', status_view),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('oidc/', include('mozilla_django_oidc.urls')), # OIDC URLs
